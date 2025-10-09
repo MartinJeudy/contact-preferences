@@ -39,6 +39,11 @@
       top: 0;
       z-index: 100;
       box-shadow: var(--shadow);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .header.scrolled {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .header-content {
@@ -232,6 +237,8 @@
       width: 16px;
       height: 16px;
       cursor: pointer;
+      accent-color: var(--primary);
+      flex-shrink: 0;
     }
 
     .channel-option input[type="checkbox"]:disabled {
@@ -239,12 +246,27 @@
       cursor: not-allowed;
     }
 
-    /* Toggle Switch */
+    .channel-option input[type="checkbox"]:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .channel-option label {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
     .toggle {
       position: relative;
       width: 48px;
       height: 26px;
       flex-shrink: 0;
+      transition: transform 0.1s ease;
     }
 
     .toggle input {
@@ -275,6 +297,7 @@
       background: white;
       transition: 0.3s;
       border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .toggle input:checked + .toggle-slider {
@@ -283,6 +306,55 @@
 
     .toggle input:checked + .toggle-slider:before {
       transform: translateX(22px);
+    }
+
+    .toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* États focus pour accessibilité clavier */
+    .toggle input:focus + .toggle-slider {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .nav-item:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .quick-btn:focus,
+    .save-btn:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    /* Amélioration des zones de tap sur mobile */
+    @media (max-width: 640px) {
+      .toggle,
+      .channel-option,
+      .nav-item,
+      .quick-btn {
+        -webkit-tap-highlight-color: rgba(238, 101, 83, 0.1);
+      }
+
+      /* Zone de tap minimum 44x44px (recommandation Apple) */
+      .toggle {
+        padding: 9px 0;
+        margin: -9px 0;
+      }
+
+      .channel-option {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-item {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
     }
 
     /* Alert Box */
@@ -314,8 +386,6 @@
 
     /* Save Button */
     .save-section {
-      position: sticky;
-      bottom: 0;
       background: #fff;
       padding: 1.5rem 0;
       border-top: 2px solid var(--bg);
@@ -324,6 +394,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    /* Sticky uniquement sur desktop */
+    @media (min-width: 969px) {
+      .save-section {
+        position: sticky;
+        bottom: 0;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+      }
     }
 
     .save-btn {
@@ -412,68 +491,462 @@
       color: #166534;
     }
 
-    /* Responsive */
+    /* Responsive Design - Mobile First */
+    
+    /* Tablettes et écrans moyens (max 968px) */
     @media (max-width: 968px) {
       .layout {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
       }
 
       .sidebar {
         position: static;
+        order: -1;
       }
 
       .nav-section {
         display: flex;
         overflow-x: auto;
+        overflow-y: hidden;
         gap: 0.5rem;
+        padding: 0.75rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+      }
+
+      .nav-section::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .nav-section::-webkit-scrollbar-track {
+        background: var(--bg);
+        border-radius: 2px;
+      }
+
+      .nav-section::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 2px;
       }
 
       .nav-item {
         white-space: nowrap;
         margin-bottom: 0;
+        padding: 0.625rem 1rem;
+        font-size: 0.9rem;
+        flex-shrink: 0;
       }
 
       .content {
         padding: 1.5rem;
       }
 
+      .section-header {
+        flex-direction: row;
+        align-items: center;
+        padding-bottom: 0.75rem;
+      }
+
+      .section-icon {
+        font-size: 1.25rem;
+      }
+
       .save-section {
         margin: 2rem -1.5rem -1.5rem;
-        padding: 1.5rem;
-        flex-direction: column;
+        padding: 1.25rem 1.5rem;
+        flex-direction: column-reverse;
         gap: 1rem;
+        align-items: stretch;
       }
 
       .save-btn {
         width: 100%;
       }
+
+      .save-status {
+        text-align: center;
+      }
+
+      .notification-item {
+        padding: 1rem;
+      }
     }
 
+    /* Smartphones (max 640px) */
     @media (max-width: 640px) {
+      body {
+        padding: 0;
+      }
+
+      .header-content {
+        padding: 0 1rem;
+      }
+
+      .logo {
+        height: 28px;
+      }
+
+      .back-link {
+        font-size: 0.875rem;
+      }
+
       .container {
-        padding: 1rem;
+        padding: 1rem 0.75rem;
+      }
+
+      .page-header {
+        margin-bottom: 1.5rem;
+        padding: 0 0.25rem;
       }
 
       .page-title {
         font-size: 1.5rem;
+        line-height: 1.3;
+      }
+
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .content {
+        padding: 1.25rem;
+        border-radius: 8px;
+      }
+
+      .section {
+        margin-bottom: 2.5rem;
+      }
+
+      .section-header {
+        margin-bottom: 1.25rem;
+        gap: 0.75rem;
       }
 
       .section-title {
         font-size: 1.25rem;
+        line-height: 1.3;
+      }
+
+      .section-description {
+        font-size: 0.875rem;
+      }
+
+      .role-badge {
+        display: block;
+        margin-left: 0;
+        margin-top: 0.5rem;
+        width: fit-content;
+      }
+
+      .notification-item {
+        padding: 1rem 0.875rem;
+        margin-bottom: 0.875rem;
+      }
+
+      .notification-title {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        padding-right: 1rem;
+      }
+
+      .notification-description {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 0.875rem;
       }
 
       .channels {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.875rem;
+        padding-top: 0.875rem;
+      }
+
+      .channel-option {
+        font-size: 0.875rem;
+        padding: 0.375rem 0;
+      }
+
+      .channel-option input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Toggle plus grand sur mobile pour faciliter le tap */
+      .toggle {
+        width: 52px;
+        height: 28px;
+      }
+
+      .toggle-slider:before {
+        height: 22px;
+        width: 22px;
+      }
+
+      .toggle input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+      }
+
+      .alert {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .alert-icon {
+        font-size: 1.125rem;
       }
 
       .quick-actions {
         flex-direction: column;
+        gap: 0.75rem;
       }
 
       .quick-btn {
         width: 100%;
         text-align: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .save-section {
+        margin: 2rem -1.25rem -1.25rem;
+        padding: 1rem 1.25rem;
+        border-radius: 0;
+      }
+
+      .save-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+      }
+
+      .nav-section {
+        padding: 0.5rem;
+        gap: 0.375rem;
+      }
+
+      .nav-item {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.85rem;
+      }
+
+      .nav-icon {
+        font-size: 1.125rem;
+      }
+    }
+
+    /* Petits smartphones (max 400px) */
+    @media (max-width: 400px) {
+      .page-title {
+        font-size: 1.35rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+      }
+
+      .notification-title {
+        font-size: 0.9rem;
+      }
+
+      .notification-description {
+        font-size: 0.8rem;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+
+      .notification-item {
+        padding: 0.875rem 0.75rem;
+      }
+
+      .save-section {
+        padding: 1rem;
+      }
+
+      .header-content {
+        padding: 0 0.75rem;
+        gap: 0.75rem;
+      }
+
+      .logo {
+        height: 24px;
+      }
+
+      .back-link {
+        font-size: 0.8rem;
+      }
+
+      .back-link span:first-child {
+        font-size: 1.25rem;
+      }
+
+      .nav-item {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .quick-btn {
+        font-size: 0.85rem;
+        padding: 0.625rem 0.875rem;
+      }
+
+      .fab-save {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+        bottom: 12px;
+        right: 12px;
+      }
+    }
+
+    /* Très grands écrans (min 1400px) */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: 1400px;
+      }
+
+      .layout {
+        grid-template-columns: 320px 1fr;
+        gap: 2.5rem;
+      }
+
+      .content {
+        padding: 2.5rem;
+      }
+
+      .nav-item {
+        padding: 0.875rem 1.25rem;
+      }
+    }
+
+    /* Landscape mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .header {
+        position: relative;
+      }
+
+      .sidebar {
+        position: relative;
+      }
+
+      .page-header {
+        margin-bottom: 1rem;
+      }
+
+      .section {
+        margin-bottom: 2rem;
+      }
+    }
+
+    /* Mode sombre préféré (optionnel pour l'avenir) */
+    @media (prefers-color-scheme: dark) {
+      /* On garde le mode clair pour l'instant, mais structure prête */
+    }
+
+    /* Réduire les animations si préférence utilisateur */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .card {
+        animation: none;
+      }
+
+      .field {
+        animation: none;
+        opacity: 1;
+      }
+    }
+
+    /* Amélioration du contraste pour accessibilité */
+    @media (prefers-contrast: high) {
+      .notification-item {
+        border-width: 2px;
+      }
+
+      .toggle-slider {
+        border: 2px solid var(--dark);
+      }
+
+      .nav-item.active {
+        border: 2px solid var(--dark);
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .header,
+      .sidebar,
+      .quick-actions,
+      .save-section,
+      .toggle,
+      .channel-option input,
+      .fab-save {
+        display: none;
+      }
+
+      .content {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .notification-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+
+    /* Floating Action Button sur mobile (optionnel) */
+    .fab-save {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(238, 101, 83, 0.4);
+      cursor: pointer;
+      z-index: 90;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .fab-save:active {
+      transform: scale(0.9);
+    }
+
+    .fab-save.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .fab-save {
+        bottom: 16px;
+        right: 16px;
       }
     }
 
@@ -524,22 +997,22 @@
 
     <div class="layout">
       <!-- Sidebar Navigation -->
-      <aside class="sidebar">
+      <aside class="sidebar" role="navigation" aria-label="Navigation des préférences">
         <nav class="nav-section">
-          <a href="#general" class="nav-item active" data-section="general">
-            <span class="nav-icon">⚙️</span>
+          <a href="#general" class="nav-item active" data-section="general" role="tab" aria-selected="true">
+            <span class="nav-icon" aria-hidden="true">⚙️</span>
             <span>Général</span>
           </a>
-          <a href="#spectateur" class="nav-item" data-section="spectateur">
-            <span class="nav-icon">🎭</span>
+          <a href="#spectateur" class="nav-item" data-section="spectateur" role="tab" aria-selected="false">
+            <span class="nav-icon" aria-hidden="true">🎭</span>
             <span>Spectateur</span>
           </a>
-          <a href="#artiste" class="nav-item" data-section="artiste">
-            <span class="nav-icon">🎨</span>
+          <a href="#artiste" class="nav-item" data-section="artiste" role="tab" aria-selected="false">
+            <span class="nav-icon" aria-hidden="true">🎨</span>
             <span>Artiste</span>
           </a>
-          <a href="#hote" class="nav-item" data-section="hote">
-            <span class="nav-icon">🏠</span>
+          <a href="#hote" class="nav-item" data-section="hote" role="tab" aria-selected="false">
+            <span class="nav-icon" aria-hidden="true">🏠</span>
             <span>Hôte</span>
           </a>
         </nav>
@@ -1159,6 +1632,11 @@
     </div>
   </div>
 
+  <!-- Floating Action Button (mobile uniquement) -->
+  <button class="fab-save" id="fabSave" aria-label="Enregistrer les préférences">
+    💾
+  </button>
+
   <script>
     // Simulation data (en production, cela viendrait de votre API)
     let preferences = {};
@@ -1170,23 +1648,48 @@
     const mainContent = document.getElementById('mainContent');
     const navItems = document.querySelectorAll('.nav-item');
 
+    // Détection mobile/tactile
+    const isMobile = window.innerWidth <= 968;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     // Charger les préférences au démarrage
     loadPreferences();
 
-    // Navigation entre sections
+    // Navigation entre sections - Optimisée pour mobile
     navItems.forEach(item => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         const sectionId = item.getAttribute('data-section');
         
-        // Update active nav
-        navItems.forEach(nav => nav.classList.remove('active'));
+        // Update active nav et aria
+        navItems.forEach(nav => {
+          nav.classList.remove('active');
+          nav.setAttribute('aria-selected', 'false');
+        });
         item.classList.add('active');
+        item.setAttribute('aria-selected', 'true');
         
-        // Scroll to section
+        // Scroll to section avec offset pour mobile
         const section = document.getElementById(sectionId);
         if (section) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const headerHeight = document.querySelector('.header').offsetHeight;
+          const navHeight = document.querySelector('.nav-section').offsetHeight;
+          const offset = isMobile ? headerHeight + navHeight + 20 : 100;
+          
+          const elementPosition = section.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+
+        // Sur mobile, scroll la nav horizontalement vers l'item actif
+        if (isMobile) {
+          setTimeout(() => {
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }, 100);
         }
       });
     });
@@ -1267,6 +1770,11 @@
       hasUnsavedChanges = true;
       saveBtn.disabled = false;
       saveStatus.classList.remove('show');
+      
+      // Trigger scroll event pour mettre à jour le FAB
+      if (isMobile) {
+        window.dispatchEvent(new Event('scroll'));
+      }
     }
 
     function loadPreferences() {
@@ -1336,6 +1844,11 @@
         saveStatus.textContent = '✓ Préférences enregistrées';
         saveStatus.classList.add('show');
         
+        // Cacher le FAB
+        if (fabSave) {
+          fabSave.classList.remove('show');
+        }
+        
         setTimeout(() => {
           saveStatus.classList.remove('show');
         }, 3000);
@@ -1358,32 +1871,158 @@
       }
     });
 
-    // Observer l'intersection pour mettre à jour la navigation
-    const observerOptions = {
-      root: null,
-      rootMargin: '-100px 0px -80% 0px',
-      threshold: 0
+    // Observer l'intersection pour mettre à jour la navigation - Optimisé mobile
+    const getObserverOptions = () => {
+      const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+      const navHeight = document.querySelector('.nav-section')?.offsetHeight || 0;
+      const topOffset = isMobile ? headerHeight + navHeight : 100;
+      
+      return {
+        root: null,
+        rootMargin: `-${topOffset}px 0px -60% 0px`,
+        threshold: [0, 0.1, 0.5]
+      };
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
           const id = entry.target.id;
-          navItems.forEach(nav => {
-            if (nav.getAttribute('data-section') === id) {
-              navItems.forEach(n => n.classList.remove('active'));
-              nav.classList.add('active');
+          const activeNav = document.querySelector(`.nav-item[data-section="${id}"]`);
+          
+          if (activeNav && !activeNav.classList.contains('active')) {
+            navItems.forEach(n => {
+              n.classList.remove('active');
+              n.setAttribute('aria-selected', 'false');
+            });
+            activeNav.classList.add('active');
+            activeNav.setAttribute('aria-selected', 'true');
+            
+            // Sur mobile, centrer la nav sur l'item actif
+            if (isMobile) {
+              activeNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
-          });
+          }
         }
       });
-    }, observerOptions);
+    }, getObserverOptions());
 
     document.querySelectorAll('.section').forEach(section => {
       observer.observe(section);
     });
 
+    // Recalculer l'observer au redimensionnement
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        observer.disconnect();
+        const newObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+              const id = entry.target.id;
+              const activeNav = document.querySelector(`.nav-item[data-section="${id}"]`);
+              
+              if (activeNav && !activeNav.classList.contains('active')) {
+                navItems.forEach(n => {
+                  n.classList.remove('active');
+                  n.setAttribute('aria-selected', 'false');
+                });
+                activeNav.classList.add('active');
+                activeNav.setAttribute('aria-selected', 'true');
+                
+                if (window.innerWidth <= 968) {
+                  activeNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+              }
+            }
+          });
+        }, getObserverOptions());
+        
+        document.querySelectorAll('.section').forEach(section => {
+          newObserver.observe(section);
+        });
+      }, 250);
+    });
+
+    // Amélioration tactile : feedback visuel sur les interactions
+    if (isTouchDevice) {
+      // Ajouter un feedback tactile aux toggles
+      document.querySelectorAll('.toggle').forEach(toggle => {
+        toggle.addEventListener('touchstart', function() {
+          this.style.transform = 'scale(0.95)';
+        }, { passive: true });
+        
+        toggle.addEventListener('touchend', function() {
+          this.style.transform = 'scale(1)';
+        }, { passive: true });
+      });
+
+      // Améliorer le feedback des boutons
+      document.querySelectorAll('.quick-btn, .save-btn').forEach(btn => {
+        btn.addEventListener('touchstart', function() {
+          this.style.opacity = '0.7';
+        }, { passive: true });
+        
+        btn.addEventListener('touchend', function() {
+          this.style.opacity = '1';
+        }, { passive: true });
+      });
+    }
+
+    // Header shadow on scroll pour feedback visuel
+    const header = document.querySelector('.header');
+    const fabSave = document.getElementById('fabSave');
+    const saveSectionElement = document.querySelector('.save-section');
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Header shadow
+      if (scrollTop > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+
+      // FAB sur mobile : afficher si le bouton save n'est pas visible et qu'il y a des changements
+      if (isMobile && hasUnsavedChanges && saveSectionElement) {
+        const rect = saveSectionElement.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        
+        if (!isVisible && scrollTop > 300) {
+          fabSave.classList.add('show');
+        } else {
+          fabSave.classList.remove('show');
+        }
+      } else {
+        fabSave.classList.remove('show');
+      }
+      
+      lastScrollTop = scrollTop;
+    }, { passive: true });
+
+    // Clic sur FAB = scroll vers le bouton de sauvegarde
+    fabSave.addEventListener('click', () => {
+      saveSectionElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      setTimeout(() => {
+        saveBtn.focus();
+      }, 500);
+    });
+
+    // Prévenir le zoom iOS sur les inputs (déjà géré dans CSS avec font-size: 16px)
+    // Mais on s'assure que le viewport est correct
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    if (metaViewport && isMobile) {
+      metaViewport.setAttribute('content', 
+        'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
+      );
+    }
+
     console.log('🎨 Page de préférences Hormur chargée');
+    console.log('📱 Mode:', isMobile ? 'Mobile' : 'Desktop');
+    console.log('👆 Tactile:', isTouchDevice ? 'Oui' : 'Non');
   </script>
 </body>
 </html>
