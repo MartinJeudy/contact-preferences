@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Mes préférences de notifications — Hormur</title>
   <link href="https://fonts.googleapis.com/css2?family=Buenard:wght@700&family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
@@ -29,6 +29,7 @@
       font-family: 'Noto Sans', sans-serif;
       color: var(--dark);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     .header {
@@ -58,6 +59,7 @@
     .logo {
       height: 32px;
       width: auto;
+      flex-shrink: 0;
     }
 
     .back-link {
@@ -68,6 +70,7 @@
       align-items: center;
       gap: 0.5rem;
       transition: opacity 0.2s;
+      white-space: nowrap;
     }
 
     .back-link:hover {
@@ -89,11 +92,13 @@
       font-size: 2rem;
       color: var(--dark);
       margin-bottom: 0.5rem;
+      line-height: 1.2;
     }
 
     .page-subtitle {
       color: var(--gray);
       font-size: 1rem;
+      line-height: 1.4;
     }
 
     .layout {
@@ -182,6 +187,7 @@
       color: var(--gray);
       font-size: 0.95rem;
       margin-bottom: 1.5rem;
+      line-height: 1.5;
     }
 
     /* Notification Item */
@@ -203,18 +209,22 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 0.5rem;
+      gap: 1rem;
     }
 
     .notification-title {
       font-weight: 600;
       color: var(--dark);
       font-size: 1rem;
+      flex: 1;
+      line-height: 1.4;
     }
 
     .notification-description {
       color: var(--gray);
       font-size: 0.9rem;
       margin-bottom: 1rem;
+      line-height: 1.5;
     }
 
     .channels {
@@ -223,6 +233,7 @@
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px solid var(--bg);
+      flex-wrap: wrap;
     }
 
     .channel-option {
@@ -231,6 +242,7 @@
       gap: 0.5rem;
       font-size: 0.85rem;
       color: var(--gray);
+      min-width: fit-content;
     }
 
     .channel-option input[type="checkbox"] {
@@ -312,49 +324,9 @@
       transform: scale(0.95);
     }
 
-    /* États focus pour accessibilité clavier */
     .toggle input:focus + .toggle-slider {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
-    }
-
-    .nav-item:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    .quick-btn:focus,
-    .save-btn:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    /* Amélioration des zones de tap sur mobile */
-    @media (max-width: 640px) {
-      .toggle,
-      .channel-option,
-      .nav-item,
-      .quick-btn {
-        -webkit-tap-highlight-color: rgba(238, 101, 83, 0.1);
-      }
-
-      /* Zone de tap minimum 44x44px (recommandation Apple) */
-      .toggle {
-        padding: 9px 0;
-        margin: -9px 0;
-      }
-
-      .channel-option {
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-      }
-
-      .nav-item {
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-      }
     }
 
     /* Alert Box */
@@ -396,7 +368,6 @@
       align-items: center;
     }
 
-    /* Sticky uniquement sur desktop */
     @media (min-width: 969px) {
       .save-section {
         position: sticky;
@@ -416,6 +387,7 @@
       cursor: pointer;
       transition: all 0.3s;
       box-shadow: 0 4px 15px rgba(238, 101, 83, 0.3);
+      white-space: nowrap;
     }
 
     .save-btn:hover {
@@ -459,6 +431,7 @@
       transition: all 0.2s;
       font-size: 0.9rem;
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .quick-btn:hover {
@@ -492,8 +465,6 @@
     }
 
     /* Responsive Design - Mobile First */
-    
-    /* Tablettes et écrans moyens (max 968px) */
     @media (max-width: 968px) {
       .layout {
         grid-template-columns: 1fr;
@@ -570,28 +541,38 @@
       .notification-item {
         padding: 1rem;
       }
+
+      .notification-header {
+        align-items: flex-start;
+      }
     }
 
     /* Smartphones (max 640px) */
     @media (max-width: 640px) {
       body {
         padding: 0;
+        font-size: 14px;
       }
 
       .header-content {
-        padding: 0 1rem;
+        padding: 0 0.75rem;
+        gap: 0.5rem;
       }
 
       .logo {
-        height: 28px;
+        height: 24px;
       }
 
       .back-link {
         font-size: 0.875rem;
       }
 
+      .back-link span {
+        display: inline-block;
+      }
+
       .container {
-        padding: 1rem 0.75rem;
+        padding: 1rem 0.5rem;
       }
 
       .page-header {
@@ -600,123 +581,125 @@
       }
 
       .page-title {
-        font-size: 1.5rem;
-        line-height: 1.3;
+        font-size: 1.35rem;
+        line-height: 1.2;
       }
 
       .page-subtitle {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
       }
 
       .content {
-        padding: 1.25rem;
+        padding: 1rem;
         border-radius: 8px;
       }
 
       .section {
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
       }
 
       .section-header {
-        margin-bottom: 1.25rem;
-        gap: 0.75rem;
+        margin-bottom: 1rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
       }
 
       .section-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         line-height: 1.3;
+        flex: 1 1 100%;
       }
 
       .section-description {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
+        line-height: 1.5;
       }
 
       .role-badge {
-        display: block;
-        margin-left: 0;
-        margin-top: 0.5rem;
-        width: fit-content;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
       }
 
       .notification-item {
-        padding: 1rem 0.875rem;
-        margin-bottom: 0.875rem;
+        padding: 0.875rem;
+        margin-bottom: 0.75rem;
       }
 
       .notification-title {
-        font-size: 0.95rem;
-        line-height: 1.4;
-        padding-right: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.3;
       }
 
       .notification-description {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         line-height: 1.5;
-        margin-bottom: 0.875rem;
+        margin-bottom: 0.75rem;
       }
 
       .channels {
         flex-direction: column;
-        gap: 0.875rem;
-        padding-top: 0.875rem;
+        gap: 0.75rem;
+        padding-top: 0.75rem;
       }
 
       .channel-option {
-        font-size: 0.875rem;
-        padding: 0.375rem 0;
+        font-size: 0.85rem;
+        padding: 0.25rem 0;
       }
 
       .channel-option input[type="checkbox"] {
         width: 18px;
         height: 18px;
+        min-width: 18px;
       }
 
-      /* Toggle plus grand sur mobile pour faciliter le tap */
       .toggle {
-        width: 52px;
-        height: 28px;
+        width: 44px;
+        height: 24px;
       }
 
       .toggle-slider:before {
-        height: 22px;
-        width: 22px;
+        height: 18px;
+        width: 18px;
       }
 
       .toggle input:checked + .toggle-slider:before {
-        transform: translateX(24px);
+        transform: translateX(20px);
       }
 
       .alert {
-        padding: 0.875rem 1rem;
-        font-size: 0.875rem;
-        margin-bottom: 1.25rem;
+        padding: 0.75rem 0.875rem;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
       }
 
       .alert-icon {
-        font-size: 1.125rem;
+        font-size: 1rem;
       }
 
       .quick-actions {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
       }
 
       .quick-btn {
         width: 100%;
         text-align: center;
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
+        padding: 0.625rem 1rem;
+        font-size: 0.85rem;
       }
 
       .save-section {
-        margin: 2rem -1.25rem -1.25rem;
-        padding: 1rem 1.25rem;
+        margin: 1.5rem -1rem -1rem;
+        padding: 1rem;
         border-radius: 0;
       }
 
       .save-btn {
-        padding: 1rem 1.5rem;
-        font-size: 1rem;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
       }
 
       .nav-section {
@@ -725,78 +708,65 @@
       }
 
       .nav-item {
-        padding: 0.5rem 0.875rem;
-        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
       }
 
       .nav-icon {
-        font-size: 1.125rem;
+        font-size: 1rem;
       }
     }
 
-    /* Petits smartphones (max 400px) */
-    @media (max-width: 400px) {
+    /* Très petits smartphones (max 375px) */
+    @media (max-width: 375px) {
       .page-title {
-        font-size: 1.35rem;
+        font-size: 1.25rem;
       }
 
       .section-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
       }
 
       .notification-title {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
 
       .notification-description {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
       }
 
       .content {
-        padding: 1rem;
+        padding: 0.75rem;
       }
 
       .notification-item {
-        padding: 0.875rem 0.75rem;
+        padding: 0.75rem;
       }
 
       .save-section {
-        padding: 1rem;
+        padding: 0.875rem;
       }
 
       .header-content {
-        padding: 0 0.75rem;
-        gap: 0.75rem;
+        padding: 0 0.5rem;
       }
 
       .logo {
-        height: 24px;
+        height: 20px;
       }
 
       .back-link {
-        font-size: 0.8rem;
-      }
-
-      .back-link span:first-child {
-        font-size: 1.25rem;
+        font-size: 0.75rem;
       }
 
       .nav-item {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        padding: 0.375rem 0.625rem;
       }
 
       .quick-btn {
-        font-size: 0.85rem;
-        padding: 0.625rem 0.875rem;
-      }
-
-      .fab-save {
-        width: 48px;
-        height: 48px;
-        font-size: 1.25rem;
-        bottom: 12px;
-        right: 12px;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
       }
     }
 
@@ -820,142 +790,11 @@
       }
     }
 
-    /* Landscape mobile */
-    @media (max-height: 600px) and (orientation: landscape) {
-      .header {
-        position: relative;
-      }
-
-      .sidebar {
-        position: relative;
-      }
-
-      .page-header {
-        margin-bottom: 1rem;
-      }
-
-      .section {
-        margin-bottom: 2rem;
-      }
-    }
-
-    /* Mode sombre préféré (optionnel pour l'avenir) */
-    @media (prefers-color-scheme: dark) {
-      /* On garde le mode clair pour l'instant, mais structure prête */
-    }
-
-    /* Réduire les animations si préférence utilisateur */
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-
-      .card {
-        animation: none;
-      }
-
-      .field {
-        animation: none;
-        opacity: 1;
-      }
-    }
-
-    /* Amélioration du contraste pour accessibilité */
-    @media (prefers-contrast: high) {
-      .notification-item {
-        border-width: 2px;
-      }
-
-      .toggle-slider {
-        border: 2px solid var(--dark);
-      }
-
-      .nav-item.active {
-        border: 2px solid var(--dark);
-      }
-    }
-
-    /* Print styles */
-    @media print {
-      .header,
-      .sidebar,
-      .quick-actions,
-      .save-section,
-      .toggle,
-      .channel-option input,
-      .fab-save {
-        display: none;
-      }
-
-      .content {
-        box-shadow: none;
-        padding: 0;
-      }
-
-      .notification-item {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-    }
-
-    /* Floating Action Button sur mobile (optionnel) */
-    .fab-save {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: #fff;
-      border: none;
-      box-shadow: 0 4px 12px rgba(238, 101, 83, 0.4);
-      cursor: pointer;
-      z-index: 90;
-      font-size: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .fab-save:active {
-      transform: scale(0.9);
-    }
-
-    .fab-save.show {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeInUp 0.3s ease;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .fab-save {
-        bottom: 16px;
-        right: 16px;
-      }
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
-    /* Loading State */
     .loading {
       opacity: 0.6;
       pointer-events: none;
@@ -982,8 +821,8 @@
   <header class="header">
     <div class="header-content">
       <img class="logo" src="https://cdn.usestencil.com/uploads/15a569bc-3bde-45e7-bad1-cc691194f1f5/2027f087-1a72-4ad1-97f2-af1bdad55850/Logo_couleurpng_Plan_de_travail_1_copie%20(1)%20(4)-1754519156.png" alt="Hormur">
-      <a href="javascript:history.back()" class="back-link">
-        <span>←</span> Retour à mon profil
+      <a href="https://hormur.com/profil" class="back-link">
+        <span>← </span><span>Retour à mon profil</span>
       </a>
     </div>
   </header>
@@ -1022,7 +861,7 @@
       <main class="content" id="mainContent">
         <!-- Quick Actions -->
         <div class="quick-actions">
-          <button class="quick-btn" id="enableAll">✓ Tout activer</button>
+          <button class="quick-btn" id="enableAll">✔ Tout activer</button>
           <button class="quick-btn" id="disableAll">✕ Tout désactiver</button>
           <button class="quick-btn" id="resetDefault">↺ Réinitialiser</button>
         </div>
@@ -1623,7 +1462,7 @@
 
         <!-- Save Section -->
         <div class="save-section">
-          <div class="save-status" id="saveStatus">✓ Préférences enregistrées</div>
+          <div class="save-status" id="saveStatus">✔ Préférences enregistrées</div>
           <button class="save-btn" id="saveBtn">
             Enregistrer mes préférences
           </button>
@@ -1631,11 +1470,6 @@
       </main>
     </div>
   </div>
-
-  <!-- Floating Action Button (mobile uniquement) -->
-  <button class="fab-save" id="fabSave" aria-label="Enregistrer les préférences">
-    💾
-  </button>
 
   <script>
     // Simulation data (en production, cela viendrait de votre API)
@@ -1770,11 +1604,6 @@
       hasUnsavedChanges = true;
       saveBtn.disabled = false;
       saveStatus.classList.remove('show');
-      
-      // Trigger scroll event pour mettre à jour le FAB
-      if (isMobile) {
-        window.dispatchEvent(new Event('scroll'));
-      }
     }
 
     function loadPreferences() {
@@ -1841,13 +1670,8 @@
         hasUnsavedChanges = false;
 
         // Afficher le message de succès
-        saveStatus.textContent = '✓ Préférences enregistrées';
+        saveStatus.textContent = '✔ Préférences enregistrées';
         saveStatus.classList.add('show');
-        
-        // Cacher le FAB
-        if (fabSave) {
-          fabSave.classList.remove('show');
-        }
         
         setTimeout(() => {
           saveStatus.classList.remove('show');
@@ -1911,70 +1735,8 @@
       observer.observe(section);
     });
 
-    // Recalculer l'observer au redimensionnement
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        observer.disconnect();
-        const newObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
-              const id = entry.target.id;
-              const activeNav = document.querySelector(`.nav-item[data-section="${id}"]`);
-              
-              if (activeNav && !activeNav.classList.contains('active')) {
-                navItems.forEach(n => {
-                  n.classList.remove('active');
-                  n.setAttribute('aria-selected', 'false');
-                });
-                activeNav.classList.add('active');
-                activeNav.setAttribute('aria-selected', 'true');
-                
-                if (window.innerWidth <= 968) {
-                  activeNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-              }
-            }
-          });
-        }, getObserverOptions());
-        
-        document.querySelectorAll('.section').forEach(section => {
-          newObserver.observe(section);
-        });
-      }, 250);
-    });
-
-    // Amélioration tactile : feedback visuel sur les interactions
-    if (isTouchDevice) {
-      // Ajouter un feedback tactile aux toggles
-      document.querySelectorAll('.toggle').forEach(toggle => {
-        toggle.addEventListener('touchstart', function() {
-          this.style.transform = 'scale(0.95)';
-        }, { passive: true });
-        
-        toggle.addEventListener('touchend', function() {
-          this.style.transform = 'scale(1)';
-        }, { passive: true });
-      });
-
-      // Améliorer le feedback des boutons
-      document.querySelectorAll('.quick-btn, .save-btn').forEach(btn => {
-        btn.addEventListener('touchstart', function() {
-          this.style.opacity = '0.7';
-        }, { passive: true });
-        
-        btn.addEventListener('touchend', function() {
-          this.style.opacity = '1';
-        }, { passive: true });
-      });
-    }
-
     // Header shadow on scroll pour feedback visuel
     const header = document.querySelector('.header');
-    const fabSave = document.getElementById('fabSave');
-    const saveSectionElement = document.querySelector('.save-section');
-    let lastScrollTop = 0;
     
     window.addEventListener('scroll', () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -1985,40 +1747,7 @@
       } else {
         header.classList.remove('scrolled');
       }
-
-      // FAB sur mobile : afficher si le bouton save n'est pas visible et qu'il y a des changements
-      if (isMobile && hasUnsavedChanges && saveSectionElement) {
-        const rect = saveSectionElement.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
-        
-        if (!isVisible && scrollTop > 300) {
-          fabSave.classList.add('show');
-        } else {
-          fabSave.classList.remove('show');
-        }
-      } else {
-        fabSave.classList.remove('show');
-      }
-      
-      lastScrollTop = scrollTop;
     }, { passive: true });
-
-    // Clic sur FAB = scroll vers le bouton de sauvegarde
-    fabSave.addEventListener('click', () => {
-      saveSectionElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      setTimeout(() => {
-        saveBtn.focus();
-      }, 500);
-    });
-
-    // Prévenir le zoom iOS sur les inputs (déjà géré dans CSS avec font-size: 16px)
-    // Mais on s'assure que le viewport est correct
-    const metaViewport = document.querySelector('meta[name="viewport"]');
-    if (metaViewport && isMobile) {
-      metaViewport.setAttribute('content', 
-        'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
-      );
-    }
 
     console.log('🎨 Page de préférences Hormur chargée');
     console.log('📱 Mode:', isMobile ? 'Mobile' : 'Desktop');
