@@ -1742,6 +1742,20 @@
       });
     }
 
+    async function sendToN8nDatatable(prefs) {
+      const response = await fetch('/.netlify/functions/save-preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferences: prefs })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur sauvegarde n8n: ${response.status} ${response.statusText}`);
+      }
+
+      return response.json().catch(() => null);
+    }
+
     async function savePreferences() {
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<div class="spinner-inline"></div> Enregistrement...';
@@ -1749,7 +1763,7 @@
 
       // Collecter toutes les préférences
       const prefs = {};
-      
+
       document.querySelectorAll('[data-notif]').forEach(toggle => {
         const notifId = toggle.getAttribute('data-notif');
         prefs[notifId] = toggle.checked;
@@ -1761,27 +1775,25 @@
         prefs[`${parent}-${channelType}`] = channel.checked;
       });
 
-      // Simuler un appel API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // En production, envoyer à votre API
       try {
-        // await fetch('/api/preferences', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(prefs)
-        // });
+        // Sauvegarder en localStorage + envoyer au n8n datatable en parallèle
+        const [n8nResult] = await Promise.allSettled([
+          sendToN8nDatatable(prefs)
+        ]);
 
-        // Pour l'instant, sauvegarder en localStorage
         localStorage.setItem('hormurPreferences', JSON.stringify(prefs));
-        
+
+        if (n8nResult.status === 'rejected') {
+          console.error('Erreur envoi n8n:', n8nResult.reason);
+        }
+
         preferences = prefs;
         hasUnsavedChanges = false;
 
         // Afficher le message de succès
         saveStatus.textContent = '✔ Préférences enregistrées';
         saveStatus.classList.add('show');
-        
+
         setTimeout(() => {
           saveStatus.classList.remove('show');
         }, 3000);
