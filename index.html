@@ -1581,6 +1581,12 @@
   </div>
 
   <script>
+    // ─── Configuration n8n Datatable ───
+    // Ces valeurs doivent être configurées avant le déploiement.
+    // En production, injectez-les via votre système de build ou serveur.
+    const N8N_WEBHOOK_URL = ''; // URL du webhook n8n (ex: https://n8n.example.com/webhook/xxx)
+    const N8N_AUTH_PASSWORD = ''; // Mot de passe d'authentification pour le webhook n8n
+
     // Simulation data (en production, cela viendrait de votre API)
     let preferences = {};
     let hasUnsavedChanges = false;
@@ -1742,6 +1748,31 @@
       });
     }
 
+    async function sendToN8nDatatable(prefs) {
+      if (!N8N_WEBHOOK_URL) {
+        console.warn('n8n webhook URL non configurée, envoi ignoré.');
+        return;
+      }
+
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('n8n:' + N8N_AUTH_PASSWORD)
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          preferences: prefs
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur n8n webhook: ${response.status} ${response.statusText}`);
+      }
+
+      return response.json().catch(() => null);
+    }
+
     async function savePreferences() {
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<div class="spinner-inline"></div> Enregistrement...';
@@ -1749,7 +1780,7 @@
 
       // Collecter toutes les préférences
       const prefs = {};
-      
+
       document.querySelectorAll('[data-notif]').forEach(toggle => {
         const notifId = toggle.getAttribute('data-notif');
         prefs[notifId] = toggle.checked;
@@ -1761,27 +1792,25 @@
         prefs[`${parent}-${channelType}`] = channel.checked;
       });
 
-      // Simuler un appel API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // En production, envoyer à votre API
       try {
-        // await fetch('/api/preferences', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(prefs)
-        // });
+        // Sauvegarder en localStorage + envoyer au n8n datatable en parallèle
+        const [n8nResult] = await Promise.allSettled([
+          sendToN8nDatatable(prefs)
+        ]);
 
-        // Pour l'instant, sauvegarder en localStorage
         localStorage.setItem('hormurPreferences', JSON.stringify(prefs));
-        
+
+        if (n8nResult.status === 'rejected') {
+          console.error('Erreur envoi n8n:', n8nResult.reason);
+        }
+
         preferences = prefs;
         hasUnsavedChanges = false;
 
         // Afficher le message de succès
         saveStatus.textContent = '✔ Préférences enregistrées';
         saveStatus.classList.add('show');
-        
+
         setTimeout(() => {
           saveStatus.classList.remove('show');
         }, 3000);
