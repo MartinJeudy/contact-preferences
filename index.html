@@ -1581,6 +1581,12 @@
   </div>
 
   <script>
+    // ─── Configuration n8n Datatable ───
+    // Ces valeurs doivent être configurées avant le déploiement.
+    // En production, injectez-les via votre système de build ou serveur.
+    const N8N_WEBHOOK_URL = ''; // URL du webhook n8n (ex: https://n8n.example.com/webhook/xxx)
+    const N8N_AUTH_PASSWORD = ''; // Mot de passe d'authentification pour le webhook n8n
+
     // Simulation data (en production, cela viendrait de votre API)
     let preferences = {};
     let hasUnsavedChanges = false;
@@ -1743,14 +1749,25 @@
     }
 
     async function sendToN8nDatatable(prefs) {
-      const response = await fetch('/.netlify/functions/save-preferences', {
+      if (!N8N_WEBHOOK_URL) {
+        console.warn('n8n webhook URL non configurée, envoi ignoré.');
+        return;
+      }
+
+      const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preferences: prefs })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('n8n:' + N8N_AUTH_PASSWORD)
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          preferences: prefs
+        })
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur sauvegarde n8n: ${response.status} ${response.statusText}`);
+        throw new Error(`Erreur n8n webhook: ${response.status} ${response.statusText}`);
       }
 
       return response.json().catch(() => null);
